@@ -7,8 +7,7 @@ Features
 - ingame keylogger (to trap keystroke ingame) 
 - key triggering (to generate in game message as UT messaging) 
 - customize and save configuration file (numbers of timers, duration, look) for map adjustement
-
-Installation information are provided at the bottom of the document (§2)
+Check pdf handbook for further details
 
 Binaries available at https://sweetsound9.wixsite.com/uttimer DL section
 

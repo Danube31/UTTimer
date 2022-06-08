@@ -9,5 +9,3 @@ Features:
 Check pdf handbook for further details
 
 Binaries available at https://sweetsound9.wixsite.com/uttimer DL section
-
-Cancel changes

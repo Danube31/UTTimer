@@ -1,0 +1,79 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:simpleType name="Character">
+            <xs:restriction base="xs:string">
+                  <xs:maxLength value="1"/>
+            </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name = "MMSS">
+            <xs:restriction base="xs:unsignedByte">
+                  <xs:minInclusive value="0" />
+                  <xs:maxInclusive value="59" />
+            </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="RGB">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="#[0-9A-Fa-f]{6}"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name = "FontSize">
+            <xs:restriction base="xs:unsignedByte">
+                  <xs:minInclusive value="30" />
+                  <xs:maxInclusive value="170" />
+            </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name = "Port">
+            <xs:restriction base="xs:short">
+                  <xs:minInclusive value="100" />
+                  <xs:maxInclusive value="9999" />
+            </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name = "Warning">
+            <xs:restriction base="xs:unsignedByte">
+                  <xs:minInclusive value="1" />
+            </xs:restriction>
+      </xs:simpleType>
+  <xs:element name="configuration" type="configurationType"/>
+  <xs:complexType name="TimerType">
+    <xs:sequence>
+      <xs:element type="xs:boolean" name="ActiveTimer"/>
+      <xs:element type="RGB" name="ColorBackGroundRGB"/>
+      <xs:element type="MMSS" name="Minutes"/>
+      <xs:element type="MMSS" name="Seconds"/>
+      <xs:element type="xs:unsignedByte" name="Position"/>
+      <xs:element type="Character" name="TimerKey"/>
+      <xs:element type="xs:boolean" name="ActiveTimerKey"/>
+      <xs:element type="xs:string" name="StartTimerAudioFile"/>
+      <xs:element type="xs:string" name="ElapsedTimeAudioFile"/>
+      <xs:element type="Character" name="ElapsedTimeKey"/>
+      <xs:element type="xs:boolean" name="ActiveElapsedTimeKey"/>
+      <xs:element type="xs:string" name="WarningAudioFile"/>
+      <xs:element type="Character" name="WarningKey"/>
+      <xs:element type="xs:boolean" name="ActiveWarningKey"/>
+      <xs:element type="Warning" name="ThresholdWarning"/>
+      <xs:element type="xs:string" name="SpeechCommand"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="configurationType">
+    <xs:sequence>
+      <xs:element type="Character" name="StartAllTimersKey"/>
+      <xs:element type="xs:string" name="SpeechCommandStartAll"/>
+      <xs:element type="Character" name="ResetAllTimersKey"/>
+      <xs:element type="xs:string" name="SpeechCommandResetAll"/>
+      <xs:element type="xs:string" name="Disposition"/>
+      <xs:element type="xs:string" name="TimerFontName"/>
+      <xs:element type="xs:string" name="TimerFontStyle"/>
+      <xs:element type="FontSize" name="TimerFontSize"/>
+      <xs:element type="RGB" name="ColorTimerRGB"/>
+      <xs:element type="RGB" name="ColorElapsedRGB"/>
+      <xs:element type="RGB" name="ColorWarningRGB"/>
+      <xs:element type="xs:boolean" name="Videos"/>
+      <xs:element type="xs:boolean" name="ExternalKeyLogger"/>
+      <xs:element type="Port" name="KeyLoggerPort"/>
+      <xs:element type="xs:string" name="ActiveSpeechToCommand"/>
+      <xs:element type="xs:string" name="Language"/>
+      <xs:element type="TimerType" name="Timer" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

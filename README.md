@@ -2,6 +2,12 @@
 Timer for management game powerup pickup
 
 UTTimer: provide timers to manage powerups in UT (armor, belt, Udam, bi health, missile, etc)
+Features
+- voice command (speech recognition)
+- ingame keylogger (to trap keystroke ingame) 
+- key triggering (to generate in game message as UT messaging) 
+- customize and save configuration file (numbers of timers, duration, look) for map adjustement
+
 Installation information are provided at the bottom of the document (§2)
 
 Binaries available at https://sweetsound9.wixsite.com/uttimer DL section

@@ -1,4 +1,4 @@
-instructions to build binaries for Linux and Windows (resources subdirectory must be provided with binaries to properly operate)
+instructions to build binaries for Linux and Windows (resources subdirectory of source  must be provided with binaries to properly operate)
 
 Windows:
 

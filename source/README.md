@@ -107,7 +107,7 @@ V2.4.1:
 - add audio at start of timer
 - audio file better management (AudioFileWidget)
 
-2/ Installation:
+2/ Installation (if intended development):
 - mandatory modules:
     - playsound (linux)
         - pip install playsound
@@ -128,6 +128,6 @@ V2.4.1:
     - lxml (windows)
         - pip install lxml
     
-3/ exploitation
+3/ exploitation: 
 
-check handbook
+check bin directory for instruction and check provided handbook

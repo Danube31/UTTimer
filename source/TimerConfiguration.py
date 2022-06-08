@@ -50,7 +50,7 @@ import logging
 
 
 
-# this class loads antenna station data from an  offline file
+# this class loads timer data from an  offline file
 class TimerConfiguration:       
     
     # XML file containing  default UTTimer parameters (general and timers)

@@ -4,7 +4,7 @@ provide timers to manage powerups in UT (armor, belt, Udam, big health, missile,
 Features:
 - voice command (speech recognition)
 - ingame keylogger (to trap keystroke ingame) 
-- key triggering (to generate in game message as UT messaging) 
+- key triggering (to generate in game message provided by UT messaging functionnality) 
 - customize and save configuration file (numbers of timers, duration, look) for map adjustement
 
 Check pdf handbook for further details

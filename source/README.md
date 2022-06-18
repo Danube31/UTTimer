@@ -3,7 +3,7 @@
 V2.4.1:
 - Keylogger configuration fixes and changes
 - add audio at start of timer
-- audio file better management (AudioFileWidget)
+- improved audio file management (AudioFileWidget)
 
 V2.4.0:
 - Keylogger launch on win platform (no admin privilege is required)

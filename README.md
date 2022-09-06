@@ -1,4 +1,4 @@
-# UTTimer
+# UTTimer (unrealtimer)
 provide timers to manage powerups in Unreal Tournament (armor, belt, Udam, big health, missile, etc) 
 may be used for other games with timed powerups
 

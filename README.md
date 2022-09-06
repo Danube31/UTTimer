@@ -1,5 +1,6 @@
 # UTTimer
-provide timers to manage powerups in UT (armor, belt, Udam, big health, missile, etc)
+provide timers to manage powerups in Unreal Tournament (armor, belt, Udam, big health, missile, etc) 
+may be used for other games with timed powerups
 
 Features:
 - voice command (speech recognition)

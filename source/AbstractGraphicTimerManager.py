@@ -1,4 +1,5 @@
-#! /usr/bin/env python
+
+        #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 # AbstractGraphicTimerManager: virtual class, handle dynamic and graphical behaviour of Timers 
 # 
@@ -83,10 +84,10 @@ class AbstractGraphicTimerManager():
                 self.logger.debug('ElapsedTime GenKey=%s' % timerData.timer_conf[ParamTimerCnf.ElapsedTimeKey])
         else:
             if timerData.nbSeconds == 1:
-                if timerData.timer_conf[ParamTimerCnf.ElapsedTimeAudioFile] != None:
+                if timerData.timer_conf[ParamTimerCnf.ElapsedTimeAudioFile] != '':
                     self.playTimerSound(timerData.timer_conf[ParamTimerCnf.ElapsedTimeAudioFile] )
             elif timerData.timer_conf[ParamTimerCnf.ThresholdWarning] != '' and timerData.nbSeconds == int(timerData.timer_conf[ParamTimerCnf.ThresholdWarning]) :
-                if timerData.timer_conf[ParamTimerCnf.WarningAudioFile]  != None:
+                if timerData.timer_conf[ParamTimerCnf.WarningAudioFile]  != '':
                     self.playTimerSound(timerData.timer_conf[ParamTimerCnf.WarningAudioFile] )
                 timerData.label.config(fg = self.timerConf.general_conf[ParamCnf.ColorWarningRGB])
                 if timerData.timer_conf[ParamTimerCnf.ActiveWarningKey] == True and timerData.timer_conf[ParamTimerCnf.WarningKey] != '':
@@ -102,7 +103,7 @@ class AbstractGraphicTimerManager():
             self.logger.debug('launch timer %s with %d s latency' % (timerData.timer_conf[ParamTimerCnf.Name], latency))
             if timerData.timer != None and timerData.timer.is_alive():
                 timerData.timer.cancel()
-            if timerData.timer_conf[ParamTimerCnf.StartTimerAudioFile]  != None:
+            if timerData.timer_conf[ParamTimerCnf.StartTimerAudioFile]  != '':
                    self.playTimerSound(timerData.timer_conf[ParamTimerCnf.StartTimerAudioFile] )
             timerData.initTimer(latency)
             timerData.label.config(text = timerData.getStrTimerValue(), fg=self.timerConf.general_conf[ParamCnf.ColorTimerRGB], underline = -1)

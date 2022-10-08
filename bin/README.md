@@ -11,6 +11,7 @@ Copy generated binary file KeyLogger located in "dist" sub folder to "resources"
 then, apply the following command
 
 pyinstaller.exe --add-data='resources;resources' --onefile --clean UTTimer.py
+      Cancel changes
 
 2/ Linux (terminal):
 
@@ -18,7 +19,7 @@ In the folder where all python file and "resources" folder are located, apply th
 
 pyinstaller --onefile --clean keylogger.py
 
-pyinstaller --add-data='resources;resources' --onefile --clean UTTimer.py
+pyinstaller --add-data='resources:resources' --onefile --clean UTTimer.py
 
 
 Binaries are available at https://sweetsound9.wixsite.com/uttimer (DL section)

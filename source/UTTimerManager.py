@@ -22,14 +22,16 @@ from datetime import datetime
 import logging
 import lxml                                                                    
 from lxml import etree
+import shutil
 
 
 # UTTimers management
 class UTTimerManager:
-    
-    HISTORY_FILENAME = 'resources/config_history'
-    SCHEMA_XSD_FILENAME = 'resources/timerConfig.xsd'  
-    VERSION='V2.4.1'
+    RESOURCES_DIR = 'resources'
+    DOCUMENTS_DIR = os.path.expanduser('~') + os.sep +'Documents' + os.sep + 'UTTimer'
+    HISTORY_FILENAME =  DOCUMENTS_DIR + os.sep + 'config_history'
+    SCHEMA_XSD_FILENAME = RESOURCES_DIR + os.sep + 'timerConfig.xsd'  
+    VERSION='V2.4.2'
     KEYLOGGER= "keylogger"
     
     # constructor
@@ -39,7 +41,7 @@ class UTTimerManager:
         self.speechToCmd = None
         self.cfg_file = None
         self.last_cfg_file = self.cfg_file
-        self.optionsEditorMgr = None
+        self.optionsEditorMgr = None 
         self.socketThread = None
         self.clientSocket = None
         self.xsd_file = UTTimerManager.SCHEMA_XSD_FILENAME
@@ -47,13 +49,17 @@ class UTTimerManager:
         self.labelKeyLoggerStatus = None
         self.platform = platform
         self.tcpsock = None
+        self.homeuserpath = None
         
+        
+    # initialization 
     def init(self):
         # main logger
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.info('')
         self.UTtimerConfig = TimerConfiguration(self)
         self.UTtimerConfig.init()
+        self.checkDocumentsDir()
         self.checkHistoryFile()
         # main window
         self.ws = tk.Tk()
@@ -63,10 +69,25 @@ class UTTimerManager:
         # bind keystroke to activate/stop timers
         self.bindGTimers()
         # create image for keylogging status
-        self.imgOffRed = tk.PhotoImage(file='resources/DomeLight_offRed-30px.png')
-        self.imgOnRed = tk.PhotoImage(file='resources/DomeLight_onRed-30px.png')
-        self.imgOnGreen = tk.PhotoImage(file='resources/DomeLight_onGreen-30px.png')
         
+        now = datetime.now().strftime('%Y%m%d_%H%M%S')
+        self.imgOffRed = tk.PhotoImage(file=self.get_absfile(UTTimerManager.RESOURCES_DIR + os.sep + 'DomeLight_offRed-30px.png'))
+        self.imgOnRed = tk.PhotoImage(file=self.get_absfile(UTTimerManager.RESOURCES_DIR + os.sep + 'DomeLight_onRed-30px.png'))
+        self.imgOnGreen = tk.PhotoImage(file=self.get_absfile(UTTimerManager.RESOURCES_DIR + os.sep + 'DomeLight_onGreen-30px.png'))
+        self.UTLogo = tk.PhotoImage(file=self.get_absfile(UTTimerManager.RESOURCES_DIR + os.sep + 'UTlogo50.png'))
+        
+        
+    # absolute path (bundled or not)
+    def get_absfile(self, filename):
+        path_to_dat = os.path.abspath(os.path.join(os.path.dirname(__file__), filename))
+        self.logger.debug(path_to_dat)
+        return path_to_dat
+    
+    # check documents dir
+    def checkDocumentsDir(self):
+        self.logger.info('')
+        if not os.path.isdir(UTTimerManager.DOCUMENTS_DIR):
+            os.mkdir(UTTimerManager.DOCUMENTS_DIR)
     
     # check history file
     def checkHistoryFile(self):
@@ -88,13 +109,13 @@ class UTTimerManager:
                         modified = True
                         self.logger.warning('Configuration file %s doesn\'t exist anymore' % xmlfile.strip())
         except FileNotFoundError:
-            self.logger.error('History file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
+            self.logger.warning('History file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
         if modified == True:
             try:
                 with open(UTTimerManager.HISTORY_FILENAME, 'w') as historyFile:
                     historyFile.write(''.join(tabfiles))
             except FileNotFoundError:
-                self.logger.error('History file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
+                self.logger.warning('History file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
                 
     # check XML file
     def checkFile(self, cfg_file, xsd_file = None):
@@ -118,7 +139,7 @@ class UTTimerManager:
             self.xsd_file = xsd_file
         self.logger.info('xsd_file=%s' % self.xsd_file)
         try:
-            with open(self.xsd_file) as schemaXsdFile:                                                
+            with open(self.get_absfile(self.xsd_file)) as schemaXsdFile:                                                
                 doc_xsd = etree.parse(schemaXsdFile)   
         except FileNotFoundError:
             self.logger.error('Xsd file file %s doesn\'t exist' % self.xsd_file)
@@ -164,9 +185,9 @@ class UTTimerManager:
                     historyFile.write(self.cfg_file+'\n')
                     self.last_cfg_file  = self.cfg_file
         except FileNotFoundError:
-            self.logger.error('Configuration file %s doesn\'t exist' % self.cfg_file)
+            self.logger.warning('Configuration file %s doesn\'t exist' % self.cfg_file)
         except PermissionError:
-            self.logger.error('Configuration file %s can not be appended' % self.cfg_file)
+            self.logger.warning('Configuration file %s can not be appended' % self.cfg_file)
         else:
             # reload file to clean duplicate
             try:
@@ -174,7 +195,7 @@ class UTTimerManager:
                 with open(UTTimerManager.HISTORY_FILENAME, 'r') as historyFile:
                     tabfiles = historyFile.readlines()
             except FileNotFoundError:
-                self.logger.error('Configuration file %s doesn\'t exist' % self.cfg_file)
+                self.logger.warning('Configuration file %s doesn\'t exist' % self.cfg_file)
             else: 
                 # remove duplicate
                 for xmlfile in tabfiles[:-1].copy():
@@ -184,7 +205,7 @@ class UTTimerManager:
                     with open(UTTimerManager.HISTORY_FILENAME, 'w') as historyFile: 
                         historyFile.write(''.join(tabfiles))
                 except FileNotFoundError:
-                    self.logger.error('Configuration file %s doesn\'t exist' % self.cfg_file)
+                    self.logger.warning('Configuration file %s doesn\'t exist' % self.cfg_file)
                 except PermissionError:
                     self.logger.error('Configuration file %s can not be written' % self.cfg_file)
                 
@@ -217,6 +238,7 @@ class UTTimerManager:
         self.speechToCmd.clean()
         # key logger connection is closed    
         self.stopKeyLoggerConnection()
+            
     
     # options edition
     def optionsEdition(self):
@@ -261,7 +283,7 @@ class UTTimerManager:
                 for xmlfile in rt:
                     self.loadCnf.add_command(label=xmlfile.strip(), command = partial(self.loadFileFromMenu, xmlfile.strip()))
         except FileNotFoundError:
-            self.logger.error('Configuration file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
+            self.logger.warning('Configuration file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
         # File->Load configuration...
         self.fileM.add_cascade(label="Load configuration...", menu=self.loadCnf)  
         # File->New configuration
@@ -285,9 +307,7 @@ class UTTimerManager:
             # timers management (dynamic and graphical)
             self.buildGTimers()
         
-        global img  # bug PhotoImage...
-        img = tk.PhotoImage(file='resources/UTlogo50.png')
-        tk.Label(self.ws, image=img).pack()
+        tk.Label(self.ws, image=self.UTLogo).pack()
         
         self.labelKeyLogger = tk.Label(self.ws, text='Keylogger')
         self.labelKeyLogger.pack()
@@ -363,7 +383,7 @@ class UTTimerManager:
     # load file from file chooser tk widget
     def loadFileFromFileChooser(self):
         self.logger.info('')
-        filename = tk.filedialog.askopenfilename(initialdir = '.', title='Open configuration file', filetypes=SelectFile.XMLFILES)
+        filename = tk.filedialog.askopenfilename(initialdir = UTTimerManager.DOCUMENTS_DIR, title='Open configuration file', filetypes=SelectFile.XMLFILES)
         if filename != () and os.path.exists(filename):
             self.logger.info('loaded file %s' % filename)
             self.loadFileFromMenu(filename)
@@ -462,9 +482,23 @@ class UTTimerManager:
     # kill keylogger process (win only => taskkill
     def killKeyLoggerProcess(self):
         self.logger.info('')
-        cmd = 'taskkill /f /im ' + UTTimerManager.KEYLOGGER + '.exe'
-        self.logger.debug('launch ' + cmd)
-        subprocess.call(cmd)
+        cmd = 'tasklist'
+        plist = 'tmp_list'
+        with open(plist, 'w') as f:
+            self.logger.debug('Dumping task list in ' + plist)         
+            subprocess.call(cmd, stdout = f)
+        
+        with open(plist, 'r') as f:
+            tab = f.readlines()
+            for task in tab:
+                if UTTimerManager.KEYLOGGER + '.exe' in task: 
+                    self.logger.debug('kill ' + task)         
+                    cmd = 'taskkill /f /im ' + UTTimerManager.KEYLOGGER + '.exe'
+                    self.logger.debug('kill ' + cmd)
+                    subprocess.call(cmd)
+                    break;
+            f.close()
+            os.remove(plist)
         
     # launch socket  for key logger
     def activateKeyLoggerInterface(self):
@@ -479,12 +513,14 @@ class UTTimerManager:
             # launch key logger
             if 'win' in self.platform:
                 self.killKeyLoggerProcess()
-                cmd = UTTimerManager.KEYLOGGER + '.exe -s localhost -p %s' % self.UTtimerConfig.general_conf[ParamCnf.KeyLoggerPort] 
+                exe = self.get_absfile(UTTimerManager.RESOURCES_DIR + os.sep + UTTimerManager.KEYLOGGER + '.exe')
+                cmd = '%s -s localhost -p %s' % (exe, self.UTtimerConfig.general_conf[ParamCnf.KeyLoggerPort])
                 self.logger.debug('launch ' + cmd)
                 subprocess.Popen(cmd, shell=True)
                 
     #manage keylogger activation/shutdown
     def manageKeyLogger(self, externalKeyLogger):
+        self.logger.info('')
         if self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger] == True:
             if externalKeyLogger == False:
                 self.activateKeyLoggerInterface()
@@ -514,7 +550,7 @@ class UTTimerManager:
             self.optionsEditorMgr.destroy()
             self.optionsEditorMgr = None
         now = datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.cfg_file = 'newConfigFile_%s.xml' % now
+        self.cfg_file = UTTimerManager.DOCUMENTS_DIR + os.sep + 'newConfigFile_%s.xml' % now
         self.UTtimerConfig.newConfiguration()
         self.optionsEdition()
         

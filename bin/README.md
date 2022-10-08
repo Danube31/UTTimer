@@ -23,7 +23,7 @@ In the folder where all python file and "resources" folder are located, apply th
 
       chmod +x keylogger UTTimer
 
-keylogger needs roots privilege to run.
+keylogger needs root privileges to run.
 
 Binaries are available at https://sweetsound9.wixsite.com/uttimer (DL section)
 

@@ -122,6 +122,10 @@ class OptionsEditorManager(tk.Toplevel):
         filename = tk.filedialog.asksaveasfilename(title=title, initialfile=os.path.basename(initialfile), initialdir = os.path.dirname(initialfile), filetypes=SelectFile.XMLFILES)
         self.logger.info(filename)
         if filename != ():
+        
+                root, ext = os.path.splitext(filename)
+                if not  '.xml' in ext:
+                    filename += '.xml'
                 self.logger.info('save to %s'% filename)
                 self.saveConfigurationChanges(filename)
             

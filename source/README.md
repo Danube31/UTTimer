@@ -4,6 +4,7 @@
 V2.4.2:
 - resources directory included in bundle
 - generation modification
+- fix linux playsound freeze when audio file is not defined
 
 V2.4.1:
 - Keylogger configuration fixes and changes

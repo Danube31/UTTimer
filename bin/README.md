@@ -11,7 +11,6 @@ Copy generated binary file keyLogger.exe located in "dist" sub folder to "resour
 then, apply the following command
 
       pyinstaller.exe --add-data='resources;resources' --onefile --clean UTTimer.py
-      Cancel changes
 
 2/ Linux (terminal):
 

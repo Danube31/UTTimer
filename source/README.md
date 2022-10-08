@@ -1,5 +1,10 @@
 1/ releases
 
+
+V2.4.2:
+- resources directory included in bundle
+- generation modification
+
 V2.4.1:
 - Keylogger configuration fixes and changes
 - add audio at start of timer
@@ -128,4 +133,4 @@ V1: fisrt release
 
 3/ exploitation: 
 
-check bin directory for instruction and check provided handbook
+check bin directory for instruction. Check also available handbook.

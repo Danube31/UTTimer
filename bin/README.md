@@ -4,7 +4,7 @@ instructions to build binaries for Linux and Windows (pyinstaller python module 
 
 In the folder where all python file and "resources" folder are located, apply the followind command
 
-pyinstaller.exe --onefile --clean KeyLogger.py
+pyinstaller.exe --onefile --clean keylogger.py
 
 Copy generated binary file KeyLogger located in "dist" sub folder to "resources" folder
 
@@ -16,7 +16,7 @@ pyinstaller.exe --add-data='resources;resources' --onefile --clean UTTimer.py
 
 In the folder where all python file and "resources" folder are located, apply the followind command
 
-pyinstaller --onefile --clean KeyLogger.py
+pyinstaller --onefile --clean keylogger.py
 
 pyinstaller --add-data='resources;resources' --onefile --clean UTTimer.py
 

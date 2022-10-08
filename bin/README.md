@@ -1,4 +1,4 @@
-instructions to build binaries for Linux and Windows (python pyinstaller module is required)
+instructions to build binaries for Linux and Windows (pyinstaller python module is required)
 
 1/ Windows (powershell) :
 

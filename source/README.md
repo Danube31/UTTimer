@@ -129,6 +129,7 @@ V1: fisrt release
         - pip install SpeechRecognition
     - lxml (windows)
         - pip install lxml
+    - keyboard (for keylogger)
     
 
 

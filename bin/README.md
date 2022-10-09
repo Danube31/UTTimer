@@ -2,7 +2,7 @@ instructions to build binaries for Linux and Windows (pyinstaller python module 
 
 1/ Windows (powershell) :
 
-In the folder where all python file and "resources" folder are located, apply the following command:
+In the folder where all python source files and "resources" folder are located, apply the following command:
 
       pyinstaller.exe --onefile --clean keylogger.py
 
@@ -14,7 +14,7 @@ then, apply the following command
 
 2/ Linux (terminal):
 
-In the folder where all python file and "resources" folder are located, apply the following commands:
+In the folder where all python source files and "resources" folder are located, apply the following commands:
 
       pyinstaller --onefile --clean keylogger.py
 

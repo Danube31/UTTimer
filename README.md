@@ -9,5 +9,6 @@ Features:
 - customize and save configuration file (numbers of timers, duration, look) for map adjustement
 
 Check pdf handbook for further details
+Check bin folder for build instructions
 
-Binaries available at https://sweetsound9.wixsite.com/uttimer DL section
+Binaries are available at https://sweetsound9.wixsite.com/uttimer DL section

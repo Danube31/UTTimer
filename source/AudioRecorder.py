@@ -21,6 +21,7 @@ class AudioRecorder(tk.Toplevel):
      # constructor
     def __init__(self, omgr):
         super().__init__(omgr)
+        self.omgr = omgr
         # Record in chunks of 1024 samples
         self.chunk = 1024 
         # 16 bits per sample
@@ -70,12 +71,12 @@ class AudioRecorder(tk.Toplevel):
         self.channels = maxInputChannels
  
         global img # bug PhotoImage
-        img = tk.PhotoImage(file='resources/StartRecord.png')
+        img = tk.PhotoImage(file=self.omgr.mgr.get_absfile('resources/StartRecord.png'))
         self.buttonRecord = tk.Button(RecordFrame, image=img, command=self.record)
         self.buttonRecord.grid(row = 1, column = 0)    
         
         global img1# bug PhotoImage...
-        img1 = tk.PhotoImage(file='resources/StopRecord.png')
+        img1 = tk.PhotoImage(file=self.omgr.mgr.get_absfile('resources/StopRecord.png'))
         self.buttonStop = tk.Button(RecordFrame, image=img1, command=self.stopRecording, state=tk.DISABLED)
         self.buttonStop.grid(row = 1, column = 1)    
             

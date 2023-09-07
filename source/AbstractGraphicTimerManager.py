@@ -129,13 +129,13 @@ class AbstractGraphicTimerManager():
     # speech to command with web latency
     def processSpeech(self, speech, latency):
         self.logger.info('speech=%s latency=%d' % (speech, latency))
-        if self.timerConf.general_conf['SpeechCommandStartAll'] in speech:
+        if len(self.timerConf.general_conf['SpeechCommandStartAll']) > 0 and self.timerConf.general_conf['SpeechCommandStartAll'] in speech:
                self.startAllTimers()
-        elif self.timerConf.general_conf['SpeechCommandResetAll']  in speech:
+        elif len(self.timerConf.general_conf['SpeechCommandResetAll']) > 0 and self.timerConf.general_conf['SpeechCommandResetAll']  in speech:
                self.resetAllTimers()
         else:
             for timerData in self.timerConf.TimerDataList:
-                if timerData.isActive() == True  and timerData.timer_conf['SpeechCommand'] in speech:
+                if timerData.isActive() == True  and len(timerData.timer_conf['SpeechCommand']) > 0 and timerData.timer_conf['SpeechCommand'] in speech:
                      self.launchTimer(timerData, latency)
                      break
                                  

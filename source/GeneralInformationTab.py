@@ -33,7 +33,6 @@ class GeneralInformationTab(AbstractInfoTab):
                 self.Var[ParamCnf.TimerFontSize]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.TimerFontSize]), self.omgr.changeFont)
                 self.Var[ParamCnf.ActiveSpeechToCommand]= DataVarTab(tk.BooleanVar(value = self.timerConf.general_conf[ParamCnf.ActiveSpeechToCommand]), None)
                 self.Var[ParamCnf.Language]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.Language]), None)
-                self.Var[ParamCnf.KeyLoggerPort]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.KeyLoggerPort]), None)
                 self.Var[ParamCnf.InternalKeyLogger]= DataVarTab(tk.BooleanVar(value = self.timerConf.general_conf[ParamCnf.InternalKeyLogger]), self.omgr.changeInternalKeyLogger)
                 self.Var[ParamCnf.Videos]= DataVarTab(tk.BooleanVar(value = self.timerConf.general_conf[ParamCnf.Videos]), None)
                 
@@ -169,12 +168,6 @@ class GeneralInformationTab(AbstractInfoTab):
                 
                 InternalKeyLoggerCheckButton = tk.Checkbutton(miscellaneousFrame, variable=self.Var[ParamCnf.InternalKeyLogger].var)
                 InternalKeyLoggerCheckButton.grid(row=0, column=1)
-                
-                tk.Label(miscellaneousFrame, text = 'Internal Keylogger port: ').grid(row = 0, column = 2, padx=20)
-                
-                vmcd = RangeIntegerLimitedEntry(miscellaneousFrame , 0, 9999)
-                self.keyLoggerPortEntry = tk.Entry(miscellaneousFrame, width=4, validate='key', validatecommand= vmcd.getValidateCommand(),  textvariable=self.Var[ParamCnf.KeyLoggerPort].var  )
-                self.keyLoggerPortEntry.grid(row = 0, column = 3)
                 
                 
         # bind

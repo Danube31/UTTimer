@@ -6,7 +6,6 @@
 
 import tkinter as tk
 import os
-import subprocess
 import sys
 from TimerConfiguration import TimerConfiguration
 from GraphicDetachedTimersManager import GraphicDetachedTimersManager
@@ -15,14 +14,12 @@ from SpeechToTextUTTimer import SpeechToCommand
 from OptionsEditorManager import OptionsEditorManager
 from Util import *
 from functools import partial
-from threading import Timer, Thread
-import socket
-import time
+from threading import Thread
 from datetime import datetime
 import logging
 import lxml                                                                    
 from lxml import etree
-import shutil
+import keyboard
 
 
 # UTTimers management
@@ -42,7 +39,7 @@ class UTTimerManager:
         self.cfg_file = None
         self.last_cfg_file = self.cfg_file
         self.optionsEditorMgr = None 
-        self.socketThread = None
+        self.keyLoggerThread = None
         self.clientSocket = None
         self.xsd_file = UTTimerManager.SCHEMA_XSD_FILENAME
         self.labelKeyLogger = None
@@ -358,8 +355,6 @@ class UTTimerManager:
         self.updateItemsMenuLoadConf()
         # update keylogger setup if changed in the new configuration
         self.manageKeyLogger(externalKeyLogger)
-        # update key list
-        self.sendKeysList()
         
     # update menu on file loading
     def updateItemsMenuLoadConf(self):
@@ -419,104 +414,43 @@ class UTTimerManager:
         if self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger] == True:
             self.gTimersManager.processKeyChar(message[0])
 
-    # thread procedure to handle client connections/messages
-    def clientConnexionThread(self):
-        self.logger.info('')
-        port = int(self.UTtimerConfig.general_conf[ParamCnf.KeyLoggerPort])
-        if self.tcpsock == None:
-            self.tcpsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.tcpsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.tcpsock.bind(("", port))
-            self.tcpsock.listen(10)
-        while self.loopKeyLogger == True:
-            self.logger.info( "listening on port %d ..." % port)
-            (self.clientSocket, (self.ipclient, port_client)) = self.tcpsock.accept()
-            self.updateKeyLoggerStatus()
-            self.logger.info( 'client %s connected' % self.ipclient)
-            # send keys list
-            self.sendKeysList()
-            # # send list of authorized keys for external key logger
-            self.clientSocket.send(self.UTtimerConfig.getKeysList().encode())
-            while  self.loopKeyLogger == True:
-                try:
-                        # test if client still connected
-                        message = self.clientSocket.recv(4096).decode()
-                        if not message:
-                                self.logger.warning("clientConnexionThread : client %s deconnexion " % self.ipclient)
-                                self.clientSocket = None
-                                self.updateKeyLoggerStatus()
-                                break
-                        else:
-                                self.processMessage(message)
-                except socket.error:
-                        # fin du thread
-                        self.logger.warning("clientConnexionThread : client %s deconnexion on socket error" % self.ipclient)
-                        self.clientSocket = None
-                        self.updateKeyLoggerStatus()
-                        break
-        if self.clientSocket != None:
-            self.clientSocket.close()
-        self.logger.info( "Shutdown thread server")
-            
-    # send keys list
-    def sendKeysList(self):
-        self.logger.info('')
-        if self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger] == True and self.clientSocket != None: 
-            self.logger.debug('send keys updates to client %s' % self.ipclient)
-            self.clientSocket.send(self.UTtimerConfig.getKeysList().encode())
+    def callbackKeyLogger(self, event):
+        """
+        This callback is invoked whenever a keyboard event is occured
+        (i.e when a key is released in this example)
+        """
+        m = str(event.name)
+        if m in self.UTtimerConfig.getKeysList():
+            self.logger.info(f'keypress: {m}')
+            self.processMessage(m)
+
+    def startKeyLogging(self):
+        # start the keylogger
+        keyboard.on_release(callback=self.callbackKeyLogger)
+        # block the current thread, wait until CTRL+C is pressed
+        keyboard.wait()
+
          
     # update KeyLoggerStatus if necessary
     def updateKeyLoggerStatus(self):
         self.logger.info('')
         if self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger] == True:
-            if self.clientSocket == None:
-                self.logger.debug('')
-                self.labelKeyLoggerStatus.config(image=self.imgOnRed)
-            else:
-                self.logger.debug('')
-                self.labelKeyLoggerStatus.config(image=self.imgOnGreen)
+            self.logger.debug('')
+            self.labelKeyLoggerStatus.config(image=self.imgOnGreen)
         elif self.labelKeyLoggerStatus != None:
-                self.logger.debug('')
-                self.labelKeyLoggerStatus.config(image=self.imgOffRed)
-                  
-    # kill keylogger process (win only => taskkill
-    def killKeyLoggerProcess(self):
-        self.logger.info('')
-        cmd = 'tasklist'
-        plist = 'tmp_list'
-        with open(plist, 'w') as f:
-            self.logger.debug('Dumping task list in ' + plist)         
-            subprocess.call(cmd, stdout = f)
-        
-        with open(plist, 'r') as f:
-            tab = f.readlines()
-            for task in tab:
-                if UTTimerManager.KEYLOGGER + '.exe' in task: 
-                    self.logger.debug('kill ' + task)         
-                    cmd = 'taskkill /f /im ' + UTTimerManager.KEYLOGGER + '.exe'
-                    self.logger.debug('kill ' + cmd)
-                    subprocess.call(cmd)
-                    break;
-            f.close()
-            os.remove(plist)
+            self.logger.debug('')
+            self.labelKeyLoggerStatus.config(image=self.imgOffRed)
+
         
     # launch socket  for key logger
     def activateKeyLoggerInterface(self):
         self.logger.info('')
-        if self.socketThread == None:
+        if self.keyLoggerThread == None:
            # launch server thread
             self.loopKeyLogger = True
-            self.socketThread = Thread(target=self.clientConnexionThread)
-            self.socketThread.daemon = True
-            self.socketThread.start()
-            
-            # launch key logger
-            if 'win' in self.platform:
-                self.killKeyLoggerProcess()
-                exe = self.get_absfile(UTTimerManager.RESOURCES_DIR + os.sep + UTTimerManager.KEYLOGGER + '.exe')
-                cmd = '%s -s localhost -p %s' % (exe, self.UTtimerConfig.general_conf[ParamCnf.KeyLoggerPort])
-                self.logger.debug('launch ' + cmd)
-                subprocess.Popen(cmd, shell=True)
+            self.keyLoggerThread = Thread(target=self.startKeyLogging)
+            self.keyLoggerThread.daemon = True
+            self.keyLoggerThread.start()
                 
     #manage keylogger activation/shutdown
     def manageKeyLogger(self, externalKeyLogger):
@@ -534,9 +468,7 @@ class UTTimerManager:
     def stopKeyLoggerConnection(self):
         self.logger.info('')
         self.loopKeyLogger = False
-        self.socketThread = None
-        if 'win' in self.platform:
-            self.killKeyLoggerProcess()
+        self.keyLoggerThread = None
         
     # configuration creation
     def newConfiguration(self):

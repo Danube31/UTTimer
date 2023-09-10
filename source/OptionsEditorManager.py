@@ -242,9 +242,9 @@ class OptionsEditorManager(tk.Toplevel):
                 self.mgr.gTimersManager.changeValue(name)
   
     #modify status
-    def changeExternalKeyLogger(self):
+    def changeInternalKeyLogger(self):
         self.logger.info('')
-        self.mgr.manageKeyLogger(not(self.timerConf.general_conf[ParamCnf.ExternalKeyLogger]))
+        self.mgr.manageKeyLogger(not(self.timerConf.general_conf[ParamCnf.InternalKeyLogger]))
     
     #get tab name from tabs' name
     def getNameFromTimeTabs(self, name):

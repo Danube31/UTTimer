@@ -20,9 +20,9 @@ class GeneralInformationTab(AbstractInfoTab):
                 super().__init__(omgr, frame)
                 
                 # Var/Func initialization
-                self.Var[ParamCnf.StartAllTimersKey]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.StartAllTimersKey]), self.omgr.mgr.sendKeysList)
+                self.Var[ParamCnf.StartAllTimersKey]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.StartAllTimersKey]), None)
                 self.Var[ParamCnf.SpeechCommandStartAll]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.SpeechCommandStartAll]), None)
-                self.Var[ParamCnf.ResetAllTimersKey]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.ResetAllTimersKey]), self.omgr.mgr.sendKeysList)
+                self.Var[ParamCnf.ResetAllTimersKey]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.ResetAllTimersKey]), None)
                 self.Var[ParamCnf.SpeechCommandResetAll]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.SpeechCommandResetAll]), None)
                 self.Var[ParamCnf.ColorTimerRGB] = DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.ColorTimerRGB]), self.omgr.changeFgColorTimer)
                 self.Var[ParamCnf.ColorWarningRGB] = DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.ColorWarningRGB]), None)

@@ -25,7 +25,6 @@ class ParamCnf():
         ColorWarningRGB = 'ColorWarningRGB'
         Videos = 'Videos'
         InternalKeyLogger = 'InternalKeyLogger'
-        KeyLoggerPort = 'KeyLoggerPort'
         ActiveSpeechToCommand = 'ActiveSpeechToCommand'
         Language = 'Language'
                 

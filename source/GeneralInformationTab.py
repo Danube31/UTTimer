@@ -34,7 +34,7 @@ class GeneralInformationTab(AbstractInfoTab):
                 self.Var[ParamCnf.ActiveSpeechToCommand]= DataVarTab(tk.BooleanVar(value = self.timerConf.general_conf[ParamCnf.ActiveSpeechToCommand]), None)
                 self.Var[ParamCnf.Language]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.Language]), None)
                 self.Var[ParamCnf.KeyLoggerPort]= DataVarTab(tk.StringVar(value = self.timerConf.general_conf[ParamCnf.KeyLoggerPort]), None)
-                self.Var[ParamCnf.ExternalKeyLogger]= DataVarTab(tk.BooleanVar(value = self.timerConf.general_conf[ParamCnf.ExternalKeyLogger]), self.omgr.changeExternalKeyLogger)
+                self.Var[ParamCnf.InternalKeyLogger]= DataVarTab(tk.BooleanVar(value = self.timerConf.general_conf[ParamCnf.InternalKeyLogger]), self.omgr.changeInternalKeyLogger)
                 self.Var[ParamCnf.Videos]= DataVarTab(tk.BooleanVar(value = self.timerConf.general_conf[ParamCnf.Videos]), None)
                 
                 # modification detection
@@ -165,12 +165,12 @@ class GeneralInformationTab(AbstractInfoTab):
                 miscellaneousFrame= tk.LabelFrame(self.frame, text='Miscellaneous')
                 miscellaneousFrame.pack(fill = 'x', expand=True)
                 
-                tk.Label(miscellaneousFrame, text = 'External Keylogger: ').grid(row = 0, column = 0)
+                tk.Label(miscellaneousFrame, text = 'Internal Keylogger: ').grid(row = 0, column = 0)
                 
-                externalKeyLoggerCheckButton = tk.Checkbutton(miscellaneousFrame, variable=self.Var[ParamCnf.ExternalKeyLogger].var)
-                externalKeyLoggerCheckButton.grid(row=0, column=1)
+                InternalKeyLoggerCheckButton = tk.Checkbutton(miscellaneousFrame, variable=self.Var[ParamCnf.InternalKeyLogger].var)
+                InternalKeyLoggerCheckButton.grid(row=0, column=1)
                 
-                tk.Label(miscellaneousFrame, text = 'External Keylogger port: ').grid(row = 0, column = 2, padx=20)
+                tk.Label(miscellaneousFrame, text = 'Internal Keylogger port: ').grid(row = 0, column = 2, padx=20)
                 
                 vmcd = RangeIntegerLimitedEntry(miscellaneousFrame , 0, 9999)
                 self.keyLoggerPortEntry = tk.Entry(miscellaneousFrame, width=4, validate='key', validatecommand= vmcd.getValidateCommand(),  textvariable=self.Var[ParamCnf.KeyLoggerPort].var  )

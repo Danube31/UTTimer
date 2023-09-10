@@ -24,7 +24,7 @@ import logging
   # <ColorElapsedRGB>red</ColorElapsedRGB>
   # <ColorWarningRGB>orange</ColorWarningRGB>
   # <Videos>True</Videos>
-  # <ExternalKeyLogger>False</ExternalKeyLogger>
+  # <InternalKeyLogger>False</InternalKeyLogger>
   # <KeyLoggerPort>4159</KeyLoggerPort>
  # <ActiveSpeechToCommand>True</ActiveSpeechToCommand>
   # <Language>fr-FR</Language>
@@ -50,7 +50,7 @@ import logging
 
 
 
-# this class loads timer data from an  offline file
+# this class loads antenna station data from an  offline file
 class TimerConfiguration:       
     
     # XML file containing  default UTTimer parameters (general and timers)
@@ -85,7 +85,7 @@ class TimerConfiguration:
         TimerConfiguration.general_conf[ParamCnf.ColorElapsedRGB]= '#FF0000' 
         TimerConfiguration.general_conf[ParamCnf.ColorWarningRGB] = '#FFA500' 
         TimerConfiguration.general_conf[ParamCnf.Videos]= False
-        TimerConfiguration.general_conf[ParamCnf.ExternalKeyLogger]= False
+        TimerConfiguration.general_conf[ParamCnf.InternalKeyLogger]= False
         TimerConfiguration.general_conf[ParamCnf.KeyLoggerPort] ='1550'
         TimerConfiguration.general_conf[ParamCnf.ActiveSpeechToCommand] = False
         TimerConfiguration.general_conf[ParamCnf.Language] = 'fr_FR'
@@ -108,7 +108,7 @@ class TimerConfiguration:
         TimerConfiguration.general_conf[ParamCnf.ColorElapsedRGB]= getStrNullFromNone(self.root.find(ParamCnf.ColorElapsedRGB).text)
         TimerConfiguration.general_conf[ParamCnf.ColorWarningRGB] = getStrNullFromNone(self.root.find(ParamCnf.ColorWarningRGB).text)
         TimerConfiguration.general_conf[ParamCnf.Videos]= getBoolFromStr(self.root.find(ParamCnf.Videos).text)
-        TimerConfiguration.general_conf[ParamCnf.ExternalKeyLogger]= getBoolFromStr(self.root.find(ParamCnf.ExternalKeyLogger).text)
+        TimerConfiguration.general_conf[ParamCnf.InternalKeyLogger]= getBoolFromStr(self.root.find(ParamCnf.InternalKeyLogger).text)
         TimerConfiguration.general_conf[ParamCnf.KeyLoggerPort] =getStrNullFromNone(self.root.find(ParamCnf.KeyLoggerPort).text)
         TimerConfiguration.general_conf[ParamCnf.ActiveSpeechToCommand] = getBoolFromStr(self.root.find(ParamCnf.ActiveSpeechToCommand).text)
         TimerConfiguration.general_conf[ParamCnf.Language] = getStrNullFromNone(self.root.find(ParamCnf.Language).text)
@@ -155,7 +155,7 @@ class TimerConfiguration:
         self.logger.debug("ColorElapsedRGB: %s" % TimerConfiguration.general_conf[ParamCnf.ColorElapsedRGB])
         self.logger.debug("ColorWarningRGB: %s" % TimerConfiguration.general_conf[ParamCnf.ColorWarningRGB])
         self.logger.debug("Videos: %s" % getStrFromBool(TimerConfiguration.general_conf[ParamCnf.Videos]))
-        self.logger.debug("ExternalKeyLogger: %s" % getStrFromBool(TimerConfiguration.general_conf[ParamCnf.ExternalKeyLogger]))
+        self.logger.debug("InternalKeyLogger: %s" % getStrFromBool(TimerConfiguration.general_conf[ParamCnf.InternalKeyLogger]))
         self.logger.debug("KeyLoggerPort: %s" % TimerConfiguration.general_conf[ParamCnf.KeyLoggerPort])
         self.logger.debug("ActiveSpeechCommand: %s" % getStrFromBool(TimerConfiguration.general_conf[ParamCnf.ActiveSpeechToCommand]))
         self.logger.debug("Language: %s" % TimerConfiguration.general_conf[ParamCnf.Language])
@@ -180,7 +180,7 @@ class TimerConfiguration:
         ET.SubElement(self.root, ParamCnf.ColorElapsedRGB).text = TimerConfiguration.general_conf[ParamCnf.ColorElapsedRGB] 
         ET.SubElement(self.root, ParamCnf.ColorWarningRGB).text = TimerConfiguration.general_conf[ParamCnf.ColorWarningRGB] 
         ET.SubElement(self.root, ParamCnf.Videos).text = getStrFromBool(TimerConfiguration.general_conf[ParamCnf.Videos])
-        ET.SubElement(self.root, ParamCnf.ExternalKeyLogger).text = getStrFromBool(TimerConfiguration.general_conf[ParamCnf.ExternalKeyLogger])
+        ET.SubElement(self.root, ParamCnf.InternalKeyLogger).text = getStrFromBool(TimerConfiguration.general_conf[ParamCnf.InternalKeyLogger])
         ET.SubElement(self.root, ParamCnf.KeyLoggerPort).text = TimerConfiguration.general_conf[ParamCnf.KeyLoggerPort]
         ET.SubElement(self.root, ParamCnf.ActiveSpeechToCommand).text = getStrFromBool(TimerConfiguration.general_conf[ParamCnf.ActiveSpeechToCommand])
         ET.SubElement(self.root, ParamCnf.Language).text = TimerConfiguration.general_conf[ParamCnf.Language] 

@@ -24,7 +24,7 @@ class ParamCnf():
         ColorElapsedRGB = 'ColorElapsedRGB'
         ColorWarningRGB = 'ColorWarningRGB'
         Videos = 'Videos'
-        ExternalKeyLogger = 'ExternalKeyLogger'
+        InternalKeyLogger = 'InternalKeyLogger'
         KeyLoggerPort = 'KeyLoggerPort'
         ActiveSpeechToCommand = 'ActiveSpeechToCommand'
         Language = 'Language'
@@ -46,7 +46,7 @@ class ParamTimerCnf():
         WarningKey = 'WarningKey'
         ActiveWarningKey = 'ActiveWarningKey'
         ThresholdWarning = 'ThresholdWarning'
-        ExternalKeyLogger = 'ExternalKeyLogger'
+        InternalKeyLogger = 'InternalKeyLogger'
         SpeechCommand = 'SpeechCommand'
         
 if "win" in platform:

@@ -30,7 +30,7 @@ class TimerTab(AbstractInfoTab):
         # Var/Func initialization
         self.Var[ParamTimerCnf.Name] = DataVarTab(tk.StringVar(value = self.timerData.timer_conf[ParamTimerCnf.Name]), self.omgr.changeName, self.name)
         self.Var[ParamTimerCnf.ActiveTimer] = DataVarTab(tk.BooleanVar(value = self.timerData.timer_conf[ParamTimerCnf.ActiveTimer]), self.omgr.changeActiveTimer, self.name)
-        self.Var[ParamTimerCnf.TimerKey] = DataVarTab(tk.StringVar(value = self.timerData.timer_conf[ParamTimerCnf.TimerKey]), self.omgr.mgr.sendKeysList)
+        self.Var[ParamTimerCnf.TimerKey] = DataVarTab(tk.StringVar(value = self.timerData.timer_conf[ParamTimerCnf.TimerKey]), None)
         self.Var[ParamTimerCnf.ActiveTimerKey] = DataVarTab(tk.BooleanVar(value = self.timerData.timer_conf[ParamTimerCnf.ActiveTimerKey]), None)
         self.Var[ParamTimerCnf.StartTimerAudioFile] = DataVarTab(tk.StringVar(value = self.timerData.timer_conf[ParamTimerCnf.StartTimerAudioFile]), None)
         self.Var[ParamTimerCnf.Minutes] = DataVarTab(tk.StringVar(value = self.timerData.timer_conf[ParamTimerCnf.Minutes]), self.omgr.changeValue, self.name)

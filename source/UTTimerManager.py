@@ -312,7 +312,7 @@ class UTTimerManager:
         self.labelKeyLoggerStatus.pack()
         
         if loadTimers == True:
-            self.manageKeyLogger(not(self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger]))
+            self.manageKeyLogger(not(self.UTtimerConfig.general_conf[ParamCnf.InternalKeyLogger]))
         
     # timers management (dynamic and graphical)
     def buildGTimers(self):
@@ -332,11 +332,11 @@ class UTTimerManager:
         
     # load a configuration file from menu and apply it
     def loadFileFromMenu(self, filename):
-        # memorize previous status of externalKeyLogger setup
+        # memorize previous status of InternalKeyLogger setup
         if self.cfg_file == None:
-            externalKeyLogger = False
+            InternalKeyLogger = False
         else:
-            externalKeyLogger = self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger]
+            InternalKeyLogger = self.UTtimerConfig.general_conf[ParamCnf.InternalKeyLogger]
         self.logger.info('filename=%s', filename)
         self.cfg_file = filename
         # check schema
@@ -354,7 +354,7 @@ class UTTimerManager:
         # update recent configuration file
         self.updateItemsMenuLoadConf()
         # update keylogger setup if changed in the new configuration
-        self.manageKeyLogger(externalKeyLogger)
+        self.manageKeyLogger(InternalKeyLogger)
         
     # update menu on file loading
     def updateItemsMenuLoadConf(self):
@@ -411,7 +411,7 @@ class UTTimerManager:
     # process messages sent by client
     def processMessage(self, message):
         self.logger.info('message=%s' % message)
-        if self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger] == True:
+        if self.UTtimerConfig.general_conf[ParamCnf.InternalKeyLogger] == True:
             self.gTimersManager.processKeyChar(message[0])
 
     def callbackKeyLogger(self, event):
@@ -434,7 +434,7 @@ class UTTimerManager:
     # update KeyLoggerStatus if necessary
     def updateKeyLoggerStatus(self):
         self.logger.info('')
-        if self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger] == True:
+        if self.UTtimerConfig.general_conf[ParamCnf.InternalKeyLogger] == True:
             self.logger.debug('')
             self.labelKeyLoggerStatus.config(image=self.imgOnGreen)
         elif self.labelKeyLoggerStatus != None:
@@ -453,14 +453,14 @@ class UTTimerManager:
             self.keyLoggerThread.start()
                 
     #manage keylogger activation/shutdown
-    def manageKeyLogger(self, externalKeyLogger):
+    def manageKeyLogger(self, InternalKeyLogger):
         self.logger.info('')
-        if self.UTtimerConfig.general_conf[ParamCnf.ExternalKeyLogger] == True:
-            if externalKeyLogger == False:
+        if self.UTtimerConfig.general_conf[ParamCnf.InternalKeyLogger] == True:
+            if InternalKeyLogger == False:
                 self.activateKeyLoggerInterface()
                 self.updateKeyLoggerStatus()
         else:
-            if externalKeyLogger == True:
+            if InternalKeyLogger == True:
                 self.stopKeyLoggerConnection()
                 self.updateKeyLoggerStatus()
                 

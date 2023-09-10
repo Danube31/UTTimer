@@ -68,8 +68,7 @@
       <xs:element type="RGB" name="ColorElapsedRGB"/>
       <xs:element type="RGB" name="ColorWarningRGB"/>
       <xs:element type="xs:boolean" name="Videos"/>
-      <xs:element type="xs:boolean" name="InternalKeyLogger"/>
-      <xs:element type="Port" name="KeyLoggerPort"/>
+      <xs:element type="xs:boolean" name="InternalKeyLogger
       <xs:element type="xs:string" name="ActiveSpeechToCommand"/>
       <xs:element type="xs:string" name="Language"/>
       <xs:element type="TimerType" name="Timer" maxOccurs="unbounded" minOccurs="0"/>

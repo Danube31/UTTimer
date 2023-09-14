@@ -12,11 +12,10 @@
 import sys
 from optparse import OptionParser
 from UTTimerManager import UTTimerManager
-from sys import platform
 from Util import *
 import colorama
 import logging
-import tkinter as tk
+import configparser
      
 # main procedure
 if __name__ == '__main__':
@@ -61,8 +60,17 @@ if __name__ == '__main__':
     logger = logging.getLogger('main')
     # log platform
     logger.info('UTTimer running on %s platform' % platform)
+
+    try:
+        logger.debug(f"Main starting, loading configuration")
+        config = configparser.ConfigParser()
+        config.read('config.ini' )
+    except Exception as e:
+        print(f"Problem reading cfg file: {config.ini}, {e}. Exiting...")
+        sys.exit(2)
+
     # create manager
-    UTTimerMgr =  UTTimerManager(platform)
+    UTTimerMgr =  UTTimerManager(platform, config)
     # init manager
     UTTimerMgr.init()
     # 1/ XML configuration file management

@@ -1,6 +1,10 @@
 1/ releases
 
-
+V2.4.3:
+- png access audio record fix
+- keylogging integration simplification
+- config.ini introduction with configuration files store folder
+- 
 V2.4.2:
 - resources directory included in bundle
 - generation modification

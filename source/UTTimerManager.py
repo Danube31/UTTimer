@@ -26,13 +26,14 @@ import keyboard
 class UTTimerManager:
     RESOURCES_DIR = 'resources'
     DOCUMENTS_DIR = os.path.expanduser('~') + os.sep +'Documents' + os.sep + 'UTTimer'
-    HISTORY_FILENAME =  DOCUMENTS_DIR + os.sep + 'config_history'
     SCHEMA_XSD_FILENAME = RESOURCES_DIR + os.sep + 'timerConfig.xsd'  
-    VERSION='V2.4.2'
+    VERSION='V2.4.3'
     KEYLOGGER= "keylogger"
+    HISTORY_FILENAME = None
+
     
     # constructor
-    def __init__(self, platform):
+    def __init__(self, platform, config):
         self.ws = None
         self.gTimersManager = None
         self.speechToCmd = None
@@ -47,6 +48,8 @@ class UTTimerManager:
         self.platform = platform
         self.tcpsock = None
         self.homeuserpath = None
+        self.config = config
+        self.historyFilename = None
         
         
     # initialization 
@@ -54,6 +57,12 @@ class UTTimerManager:
         # main logger
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.info('')
+        if self.config.has_option('APP', 'config_dir'):
+            self.config_dir = self.config.get('APP', 'config_dir')
+        else:
+            self.config_dir = UTTimerManager.DOCUMENTS_DIR
+
+        self.historyFilename = self.config_dir + os.sep + 'config_history'
         self.UTtimerConfig = TimerConfiguration(self)
         self.UTtimerConfig.init()
         self.checkDocumentsDir()
@@ -79,12 +88,13 @@ class UTTimerManager:
         path_to_dat = os.path.abspath(os.path.join(os.path.dirname(__file__), filename))
         self.logger.debug(path_to_dat)
         return path_to_dat
-    
+
+
     # check documents dir
     def checkDocumentsDir(self):
         self.logger.info('')
-        if not os.path.isdir(UTTimerManager.DOCUMENTS_DIR):
-            os.mkdir(UTTimerManager.DOCUMENTS_DIR)
+        if not os.path.isdir(self.config_dir):
+            os.mkdir(self.config_dir)
     
     # check history file
     def checkHistoryFile(self):
@@ -92,13 +102,13 @@ class UTTimerManager:
         tabfiles = []
         modified = False 
         try:
-            with open(UTTimerManager.HISTORY_FILENAME, 'r') as historyFile:
+            with open(self.historyFilename, 'r') as historyFile:
                 tabfiles = historyFile.readlines()
                 #check history file content
                 for xmlfile in tabfiles.copy():
                     root, ext = os.path.splitext(xmlfile.strip())
                     if not  '.xml' in ext:
-                        self.logger.warning('Configuration file %s is not valid, contains non XML file %s, skip' % (UTTimerManager.HISTORY_FILENAME, xmlfile.strip()))
+                        self.logger.warning('Configuration file %s is not valid, contains non XML file %s, skip' % (self.historyFilename, xmlfile.strip()))
                         tabfiles.remove(xmlfile)
                         modified = True
                     elif not os.path.exists(xmlfile.strip()):
@@ -106,13 +116,13 @@ class UTTimerManager:
                         modified = True
                         self.logger.warning('Configuration file %s doesn\'t exist anymore' % xmlfile.strip())
         except FileNotFoundError:
-            self.logger.warning('History file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
+            self.logger.warning('History file %s doesn\'t exist' % self.historyFilename)
         if modified == True:
             try:
-                with open(UTTimerManager.HISTORY_FILENAME, 'w') as historyFile:
+                with open(self.historyFilename, 'w') as historyFile:
                     historyFile.write(''.join(tabfiles))
             except FileNotFoundError:
-                self.logger.warning('History file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
+                self.logger.warning('History file %s doesn\'t exist' % self.historyFilename)
                 
     # check XML file
     def checkFile(self, cfg_file, xsd_file = None):
@@ -177,7 +187,7 @@ class UTTimerManager:
     def manageConfigurationFileHistory(self):
         self.logger.info('')
         try:
-            with open(UTTimerManager.HISTORY_FILENAME, 'a') as historyFile:
+            with open(self.historyFilename, 'a') as historyFile:
                 if self.cfg_file != self.last_cfg_file:
                     historyFile.write(self.cfg_file+'\n')
                     self.last_cfg_file  = self.cfg_file
@@ -189,7 +199,7 @@ class UTTimerManager:
             # reload file to clean duplicate
             try:
                 tabfiles = []
-                with open(UTTimerManager.HISTORY_FILENAME, 'r') as historyFile:
+                with open(self.historyFilename, 'r') as historyFile:
                     tabfiles = historyFile.readlines()
             except FileNotFoundError:
                 self.logger.warning('Configuration file %s doesn\'t exist' % self.cfg_file)
@@ -199,7 +209,7 @@ class UTTimerManager:
                     if xmlfile == tabfiles[-1]:
                         tabfiles.remove(xmlfile)
                 try:
-                    with open(UTTimerManager.HISTORY_FILENAME, 'w') as historyFile: 
+                    with open(self.historyFilename, 'w') as historyFile:
                         historyFile.write(''.join(tabfiles))
                 except FileNotFoundError:
                     self.logger.warning('Configuration file %s doesn\'t exist' % self.cfg_file)
@@ -272,7 +282,7 @@ class UTTimerManager:
         self.loadCnf.add_separator()
         # File->Load configuration...->[list of recent files]
         try:
-            with open(UTTimerManager.HISTORY_FILENAME, 'r') as file:
+            with open(self.historyFilename, 'r') as file:
                 tabfiles = file.readlines()
                 rt =  tabfiles.copy()
                 rt.reverse()
@@ -280,7 +290,7 @@ class UTTimerManager:
                 for xmlfile in rt:
                     self.loadCnf.add_command(label=xmlfile.strip(), command = partial(self.loadFileFromMenu, xmlfile.strip()))
         except FileNotFoundError:
-            self.logger.warning('Configuration file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
+            self.logger.warning('Configuration file %s doesn\'t exist' % self.historyFilename)
         # File->Load configuration...
         self.fileM.add_cascade(label="Load configuration...", menu=self.loadCnf)  
         # File->New configuration
@@ -360,7 +370,7 @@ class UTTimerManager:
     def updateItemsMenuLoadConf(self):
         self.logger.info('')
         try:
-            with open(UTTimerManager.HISTORY_FILENAME, 'r') as file:
+            with open(self.historyFilename, 'r') as file:
                 tabfiles = file.readlines()
                 rt =  tabfiles.copy()
                 rt.reverse()
@@ -373,12 +383,12 @@ class UTTimerManager:
                 for xmlfile in rt[1:]:
                     self.loadCnf.add_command(label=xmlfile.strip(), command = partial(self.loadFileFromMenu, xmlfile.strip()))
         except FileNotFoundError:
-            self.logger.error('Configuration file %s doesn\'t exist' % UTTimerManager.HISTORY_FILENAME)
+            self.logger.error('Configuration file %s doesn\'t exist' % self.historyFilename)
         
     # load file from file chooser tk widget
     def loadFileFromFileChooser(self):
         self.logger.info('')
-        filename = tk.filedialog.askopenfilename(initialdir = UTTimerManager.DOCUMENTS_DIR, title='Open configuration file', filetypes=SelectFile.XMLFILES)
+        filename = tk.filedialog.askopenfilename(initialdir = self.config_dir, title='Open configuration file', filetypes=SelectFile.XMLFILES)
         if filename != () and os.path.exists(filename):
             self.logger.info('loaded file %s' % filename)
             self.loadFileFromMenu(filename)
@@ -425,10 +435,14 @@ class UTTimerManager:
             self.processMessage(m)
 
     def startKeyLogging(self):
-        # start the keylogger
-        keyboard.on_release(callback=self.callbackKeyLogger)
-        # block the current thread, wait until CTRL+C is pressed
-        keyboard.wait()
+        try:
+            # start the keylogger
+            keyboard.on_release(callback=self.callbackKeyLogger)
+            # block the current thread, wait until CTRL+C is pressed
+            keyboard.wait()
+        except ImportError as e:
+            self.logger.warning(e)
+            self.labelKeyLoggerStatus.config(image=self.imgOnRed)
 
          
     # update KeyLoggerStatus if necessary
@@ -482,7 +496,7 @@ class UTTimerManager:
             self.optionsEditorMgr.destroy()
             self.optionsEditorMgr = None
         now = datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.cfg_file = UTTimerManager.DOCUMENTS_DIR + os.sep + 'newConfigFile_%s.xml' % now
+        self.cfg_file = self.config_dir + os.sep + 'newConfigFile_%s.xml' % now
         self.UTtimerConfig.newConfiguration()
         self.optionsEdition()
         
